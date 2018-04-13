@@ -7,6 +7,7 @@
 </tr>
 <tr>
 <td valign="top">
+<a href="#6.14.2">6.14.2</a><br/>
 <a href="#6.14.1">6.14.1</a><br/>
 <a href="#6.14.0">6.14.0</a><br/>
 <a href="#6.13.1">6.13.1</a><br/>
@@ -61,6 +62,57 @@
 **Note:** Node.js v6 is covered by the
 [Node.js Long Term Support Plan](https://github.com/nodejs/LTS) and
 will be supported actively until April 2018 and maintained until April 2019.
+
+<a id="6.14.2"></a>
+## 2018-04-30, Version 6.14.2 'Boron' (LTS), @MylesBorins
+
+### Notable Changes
+
+Coming Soon
+
+### Commits
+
+* [[`49d8c2e8ae`](https://github.com/nodejs/node/commit/49d8c2e8ae)] - **build**: refine static and shared lib build (Yihong Wang) [#17604](https://github.com/nodejs/node/pull/17604)
+* [[`cc7469eec8`](https://github.com/nodejs/node/commit/cc7469eec8)] - **build**: allow x86\_64 as a dest\_cpu alias for x64 (Rod Vagg) [#18052](https://github.com/nodejs/node/pull/18052)
+* [[`969398d08e`](https://github.com/nodejs/node/commit/969398d08e)] - **crypto**: reuse variable instead of reevaluation (Tobias Nießen) [#17735](https://github.com/nodejs/node/pull/17735)
+* [[`4d67369c1b`](https://github.com/nodejs/node/commit/4d67369c1b)] - **doc**: fix various nits (Vse Mozhet Byt) [#19743](https://github.com/nodejs/node/pull/19743)
+* [[`057c80b088`](https://github.com/nodejs/node/commit/057c80b088)] - **doc**: move Fedor to TSC Emeritus (Myles Borins) [#18752](https://github.com/nodejs/node/pull/18752)
+* [[`bf72ee667e`](https://github.com/nodejs/node/commit/bf72ee667e)] - **doc**: add mmarchini to collaborators (Matheus Marchini) [#18740](https://github.com/nodejs/node/pull/18740)
+* [[`280af052d8`](https://github.com/nodejs/node/commit/280af052d8)] - **doc**: add history for url.parse (Steven) [#18685](https://github.com/nodejs/node/pull/18685)
+* [[`29b0d3b104`](https://github.com/nodejs/node/commit/29b0d3b104)] - **doc**: add devsnek to collaborators (Gus Caplan) [#18679](https://github.com/nodejs/node/pull/18679)
+* [[`dc6dc8232f`](https://github.com/nodejs/node/commit/dc6dc8232f)] - **doc**: add section for strategic initiatives (Michael Dawson) [#17104](https://github.com/nodejs/node/pull/17104)
+* [[`6b348d4483`](https://github.com/nodejs/node/commit/6b348d4483)] - **doc**: modify the return value of request.write() (陈刚) [#18526](https://github.com/nodejs/node/pull/18526)
+* [[`dd4d075e51`](https://github.com/nodejs/node/commit/dd4d075e51)] - **doc**: be more explicit in the sypnosis (Tim O. Peters) [#17977](https://github.com/nodejs/node/pull/17977)
+* [[`0067bccf6f`](https://github.com/nodejs/node/commit/0067bccf6f)] - **doc**: fix description of createDecipheriv (Tobias Nießen) [#18651](https://github.com/nodejs/node/pull/18651)
+* [[`bc2f0a5120`](https://github.com/nodejs/node/commit/bc2f0a5120)] - **doc**: linkify missing types (Vse Mozhet Byt) [#18444](https://github.com/nodejs/node/pull/18444)
+* [[`32089bcbc1`](https://github.com/nodejs/node/commit/32089bcbc1)] - **doc**: streamline README intro (Rich Trott) [#18483](https://github.com/nodejs/node/pull/18483)
+* [[`43839f1601`](https://github.com/nodejs/node/commit/43839f1601)] - **doc**: move Brian White to TSC Emeriti list (Rich Trott) [#18482](https://github.com/nodejs/node/pull/18482)
+* [[`27d3c1a0f4`](https://github.com/nodejs/node/commit/27d3c1a0f4)] - **doc**: add Gibson Fahnestock to TSC (Rich Trott) [#18481](https://github.com/nodejs/node/pull/18481)
+* [[`67fd520539`](https://github.com/nodejs/node/commit/67fd520539)] - **doc**: reorder section on updating PR branch (Ali Ijaz Sheikh) [#18355](https://github.com/nodejs/node/pull/18355)
+* [[`f81a69aefe`](https://github.com/nodejs/node/commit/f81a69aefe)] - **fs**: fix `createReadStream(…, {end: n})` for non-seekable fds (Anna Henningsen) [#19329](https://github.com/nodejs/node/pull/19329)
+* [[`18acad349c`](https://github.com/nodejs/node/commit/18acad349c)] - **http**: make socketPath work with no agent (Luigi Pinca) [#19425](https://github.com/nodejs/node/pull/19425)
+* [[`1edadebaa0`](https://github.com/nodejs/node/commit/1edadebaa0)] - **http**: allow \_httpMessage to be GC'ed (Luigi Pinca) [#18865](https://github.com/nodejs/node/pull/18865)
+* [[`dbe70b744c`](https://github.com/nodejs/node/commit/dbe70b744c)] - **http**: free the parser before emitting 'upgrade' (Luigi Pinca) [#18209](https://github.com/nodejs/node/pull/18209)
+* [[`77a405b92f`](https://github.com/nodejs/node/commit/77a405b92f)] - **lib**: set process.execPath on OpenBSD (Aaron Bieber) [#18543](https://github.com/nodejs/node/pull/18543)
+* [[`269c2f3ad9`](https://github.com/nodejs/node/commit/269c2f3ad9)] - **net**: remove redundant code from \_writeGeneric() (Luigi Pinca) [#18429](https://github.com/nodejs/node/pull/18429)
+* [[`988cca841e`](https://github.com/nodejs/node/commit/988cca841e)] - **process**: fix reading zero-length env vars on win32 (Anna Henningsen) [#18463](https://github.com/nodejs/node/pull/18463)
+* [[`72a5710b71`](https://github.com/nodejs/node/commit/72a5710b71)] - **readline**: update references to archived repository (Tobias Nießen) [#17924](https://github.com/nodejs/node/pull/17924)
+* [[`0ca2dad3a6`](https://github.com/nodejs/node/commit/0ca2dad3a6)] - **src**: free memory before re-setting URLHost value (Ivan Filenko) [#18357](https://github.com/nodejs/node/pull/18357)
+* [[`8f830ca896`](https://github.com/nodejs/node/commit/8f830ca896)] - **stream**: remove unreachable code (Luigi Pinca) [#18239](https://github.com/nodejs/node/pull/18239)
+* [[`64c83d7da9`](https://github.com/nodejs/node/commit/64c83d7da9)] - **stream**: simplify `src.\_readableState` to `state` (陈刚) [#18264](https://github.com/nodejs/node/pull/18264)
+* [[`d799b1cb61`](https://github.com/nodejs/node/commit/d799b1cb61)] - **test**: update a few tests to work on OpenBSD (Aaron Bieber) [#18543](https://github.com/nodejs/node/pull/18543)
+* [[`bc883fb136`](https://github.com/nodejs/node/commit/bc883fb136)] - **test**: refactor test-http-abort-before-end (cjihrig) [#18508](https://github.com/nodejs/node/pull/18508)
+* [[`44ab85018c`](https://github.com/nodejs/node/commit/44ab85018c)] - **test**: fix flaky timers-block-eventloop test (Anatoli Papirovski) [#18567](https://github.com/nodejs/node/pull/18567)
+* [[`5bcf668f42`](https://github.com/nodejs/node/commit/5bcf668f42)] - **test**: use correct size in test-stream-buffer-list (Luigi Pinca) [#18239](https://github.com/nodejs/node/pull/18239)
+* [[`f3c6febedf`](https://github.com/nodejs/node/commit/f3c6febedf)] - **test**: update references to archived repository (Tobias Nießen) [#17924](https://github.com/nodejs/node/pull/17924)
+* [[`b2a2a55271`](https://github.com/nodejs/node/commit/b2a2a55271)] - **test**: verify the shell option works properly on execFile (jvelezpo) [#18384](https://github.com/nodejs/node/pull/18384)
+* [[`fd7d1990db`](https://github.com/nodejs/node/commit/fd7d1990db)] - **test**: remove orphaned entries from status (Kyle Farnung) [#19042](https://github.com/nodejs/node/pull/19042)
+* [[`5ca8dee8cb`](https://github.com/nodejs/node/commit/5ca8dee8cb)] - **test**: remove n-api intermediate files (Gabriel Schulhof) [#19375](https://github.com/nodejs/node/pull/19375)
+* [[`46aed5800f`](https://github.com/nodejs/node/commit/46aed5800f)] - **test**: make common.mustNotCall show file:linenumber (Lance Ball) [#17257](https://github.com/nodejs/node/pull/17257)
+* [[`4d2efa2415`](https://github.com/nodejs/node/commit/4d2efa2415)] - **test**: remove mark flaky for moved test (Beth Griggs) [#19069](https://github.com/nodejs/node/pull/19069)
+* [[`502781c1d7`](https://github.com/nodejs/node/commit/502781c1d7)] - **test**: fix spelling in test case comments (Tobias Nießen) [#18018](https://github.com/nodejs/node/pull/18018)
+* [[`a91b1b928c`](https://github.com/nodejs/node/commit/a91b1b928c)] - **win, build**: fix intl-none option (Birunthan Mohanathas) [#18292](https://github.com/nodejs/node/pull/18292)
+* [[`6ff763bd66`](https://github.com/nodejs/node/commit/6ff763bd66)] - **win, build**: fix without-intl option (Bartosz Sosnowski) [#17614](https://github.com/nodejs/node/pull/17614)
 
 <a id="6.14.1"></a>
 ## 2018-03-29, Version 6.14.1 'Boron' (LTS), @MylesBorins
