@@ -3,9 +3,16 @@
 const common = require('../common');
 const { createServer } = require('http');
 const { connect } = require('net');
+const assert = require('assert');
 
 const server = createServer(common.mustCall((req, res) => {
-  req.on('end', common.mustCall());
+  let closeEmitted = false;
+  req.on('close', () => {
+    closeEmitted = true;
+  })
+  req.on('end', common.mustCall(() => {
+    assert.strictEqual(closeEmitted, false);
+  }));
   res.end('hello world');
 }));
 
