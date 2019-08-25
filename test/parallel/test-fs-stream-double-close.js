@@ -40,10 +40,9 @@ function test1(stream) {
 }
 
 function test2(stream) {
+  // Don't emit 'open' after destroy.
   stream.destroy();
-  stream.on('open', common.mustCall(function(fd) {
-    stream.destroy();
-  }));
+  stream.on('open', common.mustNotCall());
 }
 
 function test3(stream) {

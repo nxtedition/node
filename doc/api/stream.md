@@ -544,6 +544,15 @@ added: v12.3.0
 
 Getter for the property `objectMode` of a given `Writable` stream.
 
+##### writable.writableReady
+<!-- YAML
+added: REPLACEME
+-->
+
+* {boolean}
+
+Is set to `true` immediately before the [`'ready'`][] event is emitted.
+
 ##### writable.write(chunk[, encoding][, callback])
 <!-- YAML
 added: v0.9.4
@@ -1169,6 +1178,15 @@ added: v12.3.0
 
 Getter for the property `objectMode` of a given `Readable` stream.
 
+##### readable.readableReady
+<!-- YAML
+added: REPLACEME
+-->
+
+* {boolean}
+
+Is set to `true` immediately before the [`'ready'`][] event is emitted.
+
 ##### readable.resume()
 <!-- YAML
 added: v0.9.4
@@ -1622,8 +1640,8 @@ on the type of stream being created, as detailed in the chart below:
 | Use-case | Class | Method(s) to implement |
 | -------- | ----- | ---------------------- |
 | Reading only | [`Readable`] | <code>[_read()][stream-_read]</code> |
-| Writing only | [`Writable`] | <code>[_write()][stream-_write]</code>, <code>[_writev()][stream-_writev]</code>, <code>[_final()][stream-_final]</code> |
-| Reading and writing | [`Duplex`] | <code>[_read()][stream-_read]</code>, <code>[_write()][stream-_write]</code>, <code>[_writev()][stream-_writev]</code>, <code>[_final()][stream-_final]</code> |
+| Writing only | [`Writable`] | <code>[_write()][stream-_write]</code>, <code>[_writev()][stream-_writev]</code>, <code>[_final()][stream-_final]</code>, <code>[_construct()][stream-_construct]</code> |
+| Reading and writing | [`Duplex`] | <code>[_read()][stream-_read]</code>, <code>[_write()][stream-_write]</code>, <code>[_writev()][stream-_writev]</code>, <code>[_final()][stream-_final]</code>, <code>[_construct()][stream-_construct]</code> |
 | Operate on written data, then read the result | [`Transform`] | <code>[_transform()][stream-_transform]</code>, <code>[_flush()][stream-_flush]</code>, <code>[_final()][stream-_final]</code> |
 
 The implementation code for a stream should *never* call the "public" methods
@@ -1645,8 +1663,14 @@ objects and passing appropriate methods as constructor options.
 const { Writable } = require('stream');
 
 const myWritable = new Writable({
+  construct(options, callback) {
+    // Initialize state and load resources...
+  },
   write(chunk, encoding, callback) {
     // ...
+  },
+  destroy() {
+    // Free resources...
   }
 });
 ```
@@ -1700,6 +1724,8 @@ changes:
     [`stream._destroy()`][writable-_destroy] method.
   * `final` {Function} Implementation for the
     [`stream._final()`][stream-_final] method.
+  * `construct` {Function} Implementation for the
+    [`stream._construct()`][stream-_construct] method.
   * `autoDestroy` {boolean} Whether this stream should automatically call
     `.destroy()` on itself after ending. **Default:** `false`.
 
@@ -1743,6 +1769,57 @@ const myWritable = new Writable({
     // ...
   }
 });
+```
+
+#### writable.\_construct(options, callback)
+<!-- YAML
+added: REPLACEME
+-->
+
+* `options` {Object} Options passed to constructor.
+* `callback` {Function} Call this function (optionally with an error
+  argument) when finished writing any remaining data.
+
+The `_construct()` method **must not** be called directly. It may be implemented
+by child classes, and if so, will be called by the internal `Writable`
+class methods only.
+
+This optional function will be called by the stream constructor,
+delaying the `'ready'` event until `callback` is called. This is useful to
+initalize state or asynchronously initialize resources before the stream
+can be used.
+
+```js
+const { Writable } = require('stream');
+const fs = require('fs');
+
+class WriteStream extends Writable {
+  constructor(filename) {
+    super({ filename, autoDestroy: true });
+  }
+  _construct({ filename }, callback) {
+    this.filename = filename;
+    this.fd = null;
+    fs.open(this.filename, (fd, err) => {
+      if (err) {
+        callback(err);
+      } else {
+        this.fd = fd;
+        callback();
+      }
+    });
+  }
+  _write(chunk, encoding, callback) {
+    fs.write(this.fd, chunk, callback);
+  }
+  _destroy(err, callback) {
+    if (this.fd) {
+      fs.close(this.fd, (er) => callback(er || err));
+    } else {
+      callback(err);
+    }
+  }
+}
 ```
 
 #### writable.\_write(chunk, encoding, callback)
@@ -1958,6 +2035,8 @@ changes:
     method.
   * `destroy` {Function} Implementation for the
     [`stream._destroy()`][readable-_destroy] method.
+  * `construct` {Function} Implementation for the
+    [`stream._construct()`][readable-_construct] method.
   * `autoDestroy` {boolean} Whether this stream should automatically call
     `.destroy()` on itself after ending. **Default:** `false`.
 
@@ -1998,6 +2077,64 @@ const myReadable = new Readable({
     // ...
   }
 });
+```
+
+#### readable.\_construct(options, callback)
+<!-- YAML
+added: REPLACEME
+-->
+
+* `options` {Object} Options passed to constructor.
+* `callback` {Function} Call this function (optionally with an error
+  argument) when finished writing any remaining data.
+
+The `_construct()` method **must not** be called directly. It may be implemented
+by child classes, and if so, will be called by the internal `Writable`
+class methods only.
+
+This optional function will be called by the stream constructor,
+delaying the `'ready'` event until `callback` is called. This is useful to
+initalize state or asynchronously initialize resources before the stream
+can be used.
+
+```js
+const { Readable } = require('stream');
+const fs = require('fs');
+
+class ReadStream extends Readable {
+  constructor(filename) {
+    super({ autoDestroy: true, filename });
+  }
+  _construct({ filename }, callback) {
+    this.filename = filename;
+    this.fd = null;
+    fs.open(this.filename, (fd, err) => {
+      if (err) {
+        callback(err);
+      } else {
+        this.fd = fd;
+        callback();
+      }
+    });
+  }
+  _read(n) {
+    const buf = Buffer.alloc(n);
+    fs.read(this.fd, buf, 0, n, null, (err, bytesRead) => {
+      if (err) {
+        this.destroy(err);
+      } else {
+        this.push(bytesRead > 0 ? buf.slice(bytesRead) : null);
+      }
+    });
+  }
+  _destroy(err, callback) {
+    if (this.fd) {
+      fs.close(this.fd, (er) => callback(er || err));
+    } else {
+      callback(err);
+    }
+  }
+}
 ```
 
 #### readable.\_read(size)
@@ -2253,6 +2390,38 @@ const myDuplex = new Duplex({
     // ...
   }
 });
+```
+
+When using pipeline:
+
+```js
+const { Duplex } = require('stream');
+const fs = require('fs');
+
+stream.pipeline(
+  fs.createReadStream('object.json')
+    .setEncoding('utf-8'),
+  new Duplex({
+    construct(options, callback) {
+      this.data = '';
+      callback();
+    },
+    transform(chunk, encoding, callback) {
+      this.data += chunk;
+      callback();
+    },
+    flush(callback) {
+      try {
+        // Make sure is valid json.
+        JSON.parse(this.data);
+        this.push(this.data);
+      } catch (err) {
+        callback(err);
+      }
+    }
+  }),
+  fs.createWriteStream('valid-object.json')
+);
 ```
 
 #### An Example Duplex Stream
@@ -2748,6 +2917,7 @@ contain multi-byte characters.
 [object-mode]: #stream_object_mode
 [readable-_destroy]: #stream_readable_destroy_err_callback
 [readable-destroy]: #stream_readable_destroy_error
+[stream-_construct]: #stream_writable_construct_options_callback
 [stream-_final]: #stream_writable_final_callback
 [stream-_flush]: #stream_transform_flush_callback
 [stream-_read]: #stream_readable_read_size_1
