@@ -290,10 +290,8 @@ added: v0.1.26
 -->
 * `eventName` {string|symbol}
 * `listener` {Function}
-* Returns: {EventEmitter}
 
-This function is implemented by calling [`emitter.on()`][].
-When overriding, override [`emitter.on()`][].
+Alias for `emitter.on(eventName, listener)`.
 
 ### emitter.emit(eventName[, ...args])
 <!-- YAML
@@ -417,8 +415,7 @@ added: v10.0.0
 * `listener` {Function}
 * Returns: {EventEmitter}
 
-This function is implemented by calling [`emitter.removeListener()`][].
-When overriding, override [`emitter.removeListener()`][].
+Alias for [`emitter.removeListener()`][].
 
 ### emitter.on(eventName, listener)
 <!-- YAML
