@@ -259,7 +259,6 @@ async function tests() {
     let err = null;
     try {
       for await (const k of readable) {
-        assert.strictEqual(k, 'hello');
         received++;
       }
     } catch (e) {
@@ -267,7 +266,7 @@ async function tests() {
     }
 
     assert.strictEqual(err.message, 'kaboom');
-    assert.strictEqual(received, 1);
+    assert.strictEqual(received, 0);
   }
 
   {

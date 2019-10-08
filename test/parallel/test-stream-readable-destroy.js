@@ -111,9 +111,6 @@ const assert = require('assert');
   read.on('close', common.mustCall());
 
   read.destroy();
-
-  read.removeListener('end', fail);
-  read.on('end', common.mustCall());
   assert.strictEqual(read.destroyed, true);
 }
 
@@ -197,4 +194,16 @@ const assert = require('assert');
   read.destroy();
   assert.strictEqual(read.destroyed, true);
   read.read();
+}
+
+{
+  // Don't emit 'data' after destroy
+  const read = new Readable({
+    read() {
+      read.push('asd');
+    }
+  });
+  read.on('data', common.mustCall(() => {
+    read.destroy();
+  }));
 }
