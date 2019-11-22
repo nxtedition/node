@@ -14,7 +14,14 @@ writable._write = (chunk, encoding, cb) => {
 writable.end('testing ended state', common.mustCall());
 writable.end(common.mustCall());
 writable.on('finish', common.mustCall(() => {
+  let ticked = false;
   writable.end(common.mustCall((err) => {
+    assert.strictEqual(ticked, true);
     assert.strictEqual(err.code, 'ERR_STREAM_ALREADY_FINISHED');
   }));
+  writable.on('error', common.mustCall(err => {
+    assert.strictEqual(ticked, true);
+    assert.strictEqual(err.code, 'ERR_STREAM_ALREADY_FINISHED');
+  }));
+  ticked = true;
 }));

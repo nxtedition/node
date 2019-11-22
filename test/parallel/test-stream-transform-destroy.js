@@ -101,7 +101,7 @@ const assert = require('assert');
     assert.strictEqual(err, null);
     process.nextTick(() => {
       this.push(null);
-      this.end();
+      // this.end();
       cb();
     });
   }, 1);
