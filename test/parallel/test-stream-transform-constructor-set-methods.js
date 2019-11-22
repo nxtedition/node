@@ -18,18 +18,13 @@ const _transform = common.mustCall((chunk, _, next) => {
   next();
 });
 
-const _final = common.mustCall((next) => {
-  next();
-});
-
 const _flush = common.mustCall((next) => {
   next();
 });
 
 const t2 = new Transform({
   transform: _transform,
-  flush: _flush,
-  final: _final
+  flush: _flush
 });
 
 strictEqual(t2._transform, _transform);
