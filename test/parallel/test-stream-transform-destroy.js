@@ -115,9 +115,7 @@ const assert = require('assert');
   transform.destroy();
 
   transform.removeListener('end', fail);
-  transform.removeListener('finish', fail);
   transform.on('end', common.mustCall());
-  transform.on('finish', common.mustCall());
 }
 
 {
