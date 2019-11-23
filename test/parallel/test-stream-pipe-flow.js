@@ -52,10 +52,11 @@ const { Readable, Writable, PassThrough } = require('stream');
       process.nextTick(() => {
         let data = pt.read();
         if (data === null) {
-          pt.once('readable', () => {
-            data = pt.read();
-            if (data !== null) wrapper.push(data);
-          });
+          wrapper.push(data);
+          // pt.once('readable', () => {
+          //   data = pt.read();
+          //   if (data !== null) wrapper.push(data);
+          // });
         } else {
           wrapper.push(data);
         }

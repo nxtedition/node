@@ -28,3 +28,18 @@ const assert = require('assert');
     assert.strictEqual(writable.writableFinished, true);
   }));
 }
+
+{
+  // 'finish' must be invoked asynchronously
+
+  const w = new Writable({
+    write(chunk, enc, cb) { cb(); }
+  });
+
+  let ticked = false;
+  w.on('finish', common.mustCall(() => {
+    assert.strictEqual(ticked, true);
+  }));
+  w.end();
+  ticked = true;
+}
