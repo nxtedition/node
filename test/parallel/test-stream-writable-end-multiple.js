@@ -17,4 +17,7 @@ writable.on('finish', common.mustCall(() => {
   writable.end(common.mustCall((err) => {
     assert.strictEqual(err.code, 'ERR_STREAM_ALREADY_FINISHED');
   }));
+  writable.on('error', common.mustCall((err) => {
+    assert.strictEqual(err.code, 'ERR_STREAM_ALREADY_FINISHED');
+  }));
 }));

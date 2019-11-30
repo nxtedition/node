@@ -282,7 +282,9 @@ const helloWorldBuffer = Buffer.from('hello world');
     gotError = true;
   });
   w.pipe(process.stdout);
-  assert.strictEqual(gotError, true);
+  process.nextTick(() => {
+    assert.strictEqual(gotError, true);
+  });
 }
 
 {

@@ -11,33 +11,36 @@ class MyWritable extends stream.Writable {
   }
 }
 
-common.expectsError(
-  () => {
-    const m = new MyWritable({ objectMode: true });
-    m.write(null, (err) => assert.ok(err));
-  },
-  {
+{
+  const m = new MyWritable({ objectMode: true });
+  m.write(null, common.expectsError({
     code: 'ERR_STREAM_NULL_VALUES',
     type: TypeError,
     message: 'May not write null values to stream'
-  }
-);
+  }));
+  m.on('error', common.expectsError({
+    code: 'ERR_STREAM_NULL_VALUES',
+    type: TypeError,
+    message: 'May not write null values to stream'
+  }));
+}
 
 { // Should not throw.
   const m = new MyWritable({ objectMode: true }).on('error', assert);
   m.write(null, assert);
 }
 
-common.expectsError(
-  () => {
-    const m = new MyWritable();
-    m.write(false, (err) => assert.ok(err));
-  },
-  {
+{
+  const m = new MyWritable({ objectMode: false });
+  m.write(false, common.expectsError({
     code: 'ERR_INVALID_ARG_TYPE',
-    type: TypeError
-  }
-);
+    type: TypeError,
+  }));
+  m.on('error', common.expectsError({
+    code: 'ERR_INVALID_ARG_TYPE',
+    type: TypeError,
+  }));
+}
 
 { // Should not throw.
   const m = new MyWritable().on('error', assert);
