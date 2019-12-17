@@ -41,25 +41,6 @@ async function transformByFuncReturnsObjectWithSymbolAsyncIterator() {
   }
 }
 
-async function
-transformByObjReturnedWSymbolAsyncIteratorWithNonPromiseReturningNext() {
-  const mapper = (source) => ({
-    [Symbol.asyncIterator]() {
-      return {
-        next() {
-          const { done, value } = source.next();
-          return { done, value: value ? value.toUpperCase() : value };
-        }
-      };
-    }
-  });
-
-  expectsError(() => Transform.by(mapper), {
-    code: 'ERR_INVALID_ARG_TYPE',
-    type: TypeError
-  });
-}
-
 async function transformByObjReturnedWSymbolAsyncIteratorWithNoNext() {
   const mapper = () => ({
     [Symbol.asyncIterator]() {
@@ -79,8 +60,7 @@ async function transformByObjReturnedWSymbolAsyncIteratorThatIsNotFunction() {
   });
 
   expectsError(() => Transform.by(mapper), {
-    message: 'asyncGeneratorFn must return an async iterable',
-    code: 'ERR_ARG_RETURN_VALUE_NOT_ASYNC_ITERABLE',
+    code: 'ERR_INVALID_ARG_TYPE',
     type: TypeError
   });
 }
@@ -289,10 +269,8 @@ async function transformByThrowPriorToForAwait() {
 Promise.all([
   transformBy(),
   transformByFuncReturnsObjectWithSymbolAsyncIterator(),
-  // NOTE: These should be handled by Readable.from.
-  // transformByObjReturnedWSymbolAsyncIteratorWithNonPromiseReturningNext(),
-  // transformByObjReturnedWSymbolAsyncIteratorWithNoNext(),
-  // transformByObjReturnedWSymbolAsyncIteratorThatIsNotFunction(),
+  transformByObjReturnedWSymbolAsyncIteratorWithNoNext(),
+  transformByObjReturnedWSymbolAsyncIteratorThatIsNotFunction(),
   transformByFuncReturnsObjectWithoutSymbolAsyncIterator(),
   // NOTE: This doesn't make sense for iterable? Is it consistent with Readable.from?
   // transformByEncoding(),
