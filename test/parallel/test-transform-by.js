@@ -74,24 +74,6 @@ async function transformByFuncReturnsObjectWithoutSymbolAsyncIterator() {
   });
 }
 
-async function transformByEncoding() {
-  const readable = Readable.from('test'.split(''));
-  async function * mapper(source) {
-    for await (const chunk of source) {
-      strictEqual(source.encoding, 'ascii');
-      yield chunk.toUpperCase();
-    }
-  }
-  const stream = Transform.by(mapper);
-  stream.setDefaultEncoding('ascii');
-  readable.pipe(stream);
-
-  const expected = ['T', 'E', 'S', 'T'];
-  for await (const chunk of stream) {
-    strictEqual(chunk, expected.shift());
-  }
-}
-
 async function transformBySourceIteratorCompletes() {
   const readable = Readable.from('test'.split(''));
   const mustReach = mustCall();
@@ -272,8 +254,6 @@ Promise.all([
   transformByObjReturnedWSymbolAsyncIteratorWithNoNext(),
   transformByObjReturnedWSymbolAsyncIteratorThatIsNotFunction(),
   transformByFuncReturnsObjectWithoutSymbolAsyncIterator(),
-  // NOTE: This doesn't make sense for iterable? Is it consistent with Readable.from?
-  // transformByEncoding(),
   transformBySourceIteratorCompletes(),
   transformByYieldPlusReturn(),
   transformByReturnEndsStream(),
