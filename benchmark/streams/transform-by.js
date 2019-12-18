@@ -16,8 +16,14 @@ function main({ n }) {
   s.resume();
 
   bench.start();
-  for (var k = 0; k < n; ++k) {
-    s.write(String.fromCharCode(n % 64 + 64));
+
+  let k = 0;
+  function run() {
+    while (k++ < n && s.write(b));
+    if (k >= n)
+      s.end();
   }
-  s.end(() => bench.end(n));
+  s.on('drain', run);
+  s.on('finish', () => bench.end(n));
+  run();
 }
