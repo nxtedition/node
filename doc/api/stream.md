@@ -349,6 +349,15 @@ reader.pipe(writer);
 reader.unpipe(writer);
 ```
 
+##### `writable.close()`
+<!-- YAML
+added: REPLACEME
+-->
+
+* Returns: {this}
+
+Gracefully closes the stream letting any pending writes.
+
 ##### `writable.cork()`
 <!-- YAML
 added: v0.11.2
@@ -940,6 +949,15 @@ added: v0.9.4
 The `'resume'` event is emitted when [`stream.resume()`][stream-resume] is
 called and `readableFlowing` is not `true`.
 
+##### `readable.close()`
+<!-- YAML
+added: REPLACEME
+-->
+
+* Returns: {this}
+
+Gracefully closes the stream letting any pending reads complete.
+
 ##### `readable.destroy([error])`
 <!-- YAML
 added: v8.0.0
@@ -1452,6 +1470,15 @@ Examples of `Duplex` streams include:
 * [zlib streams][zlib]
 * [crypto streams][crypto]
 
+##### `duplex.close()`
+<!-- YAML
+added: REPLACEME
+-->
+
+* Returns: {this}
+
+Gracefully closes the stream letting any pending writes or reads complete.
+
 #### Class: `stream.Transform`
 <!-- YAML
 added: v0.9.4
@@ -1696,8 +1723,9 @@ of a stream that are intended for use by consumers (as described in the
 in application code consuming the stream.
 
 Avoid overriding public methods such as `write()`, `end()`, `cork()`,
-`uncork()`, `read()` and `destroy()`, or emitting internal events such
-as `'error'`, `'data'`, `'end'`, `'finish'` and `'close'` through `.emit()`.
+`uncork()`, `read()`, `close()` and `destroy()`, or emitting internal events
+such as `'error'`, `'data'`, `'end'`, `'finish'` and `'close'` through
+`.emit()`.
 Doing so can break current and future stream invariants leading to behavior
 and/or compatibility issues with other streams, stream utilities, and user
 expectations.
