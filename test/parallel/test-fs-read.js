@@ -87,3 +87,18 @@ assert.throws(
     code: 'ERR_INVALID_ARG_TYPE',
   }
 );
+
+{
+  fs.read(fd, (err, bytesRead, buffer) => {
+    buffer = buffer.slice(0, bytesRead);
+    assert.ifError(err);
+    assert.strictEqual(bytesRead, expected.length);
+    assert.deepStrictEqual(bufferAsync, expected);
+  });
+  fs.read(fd, new Buffer(expected.length), (err, bytesRead, buffer) => {
+    buffer = buffer.slice(0, bytesRead);
+    assert.ifError(err);
+    assert.strictEqual(bytesRead, expected.length);
+    assert.deepStrictEqual(bufferAsync, expected);
+  });
+}

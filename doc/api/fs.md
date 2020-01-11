@@ -2727,10 +2727,13 @@ Returns an integer representing the file descriptor.
 For detailed information, see the documentation of the asynchronous version of
 this API: [`fs.open()`][].
 
-## `fs.read(fd, buffer, offset, length, position, callback)`
+## `fs.read(fd, [buffer, offset, length, position,] callback)`
 <!-- YAML
 added: v0.0.2
 changes:
+  - version: REPLACEME
+    pr-url: REPLACEME
+    description: Make more parameters optional.
   - version: v10.10.0
     pr-url: https://github.com/nodejs/node/pull/22150
     description: The `buffer` parameter can now be any `TypedArray`, or a
