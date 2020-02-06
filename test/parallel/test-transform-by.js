@@ -5,7 +5,7 @@ const { Readable, Transform } = require('stream');
 const { strictEqual } = require('assert');
 
 async function transformBy() {
-  const readable = Readable.from('test');
+  const readable = Readable.from('test'.split(''));
   async function * mapper(source) {
     for await (const chunk of source) {
       yield chunk.toUpperCase();
@@ -21,7 +21,7 @@ async function transformBy() {
 }
 
 async function transformByFuncReturnsObjectWithSymbolAsyncIterator() {
-  const readable = Readable.from('test');
+  const readable = Readable.from('test'.split(''));
   const mapper = (source) => ({
     [Symbol.asyncIterator]() {
       return {
@@ -41,26 +41,6 @@ async function transformByFuncReturnsObjectWithSymbolAsyncIterator() {
   }
 }
 
-async function
-transformByObjReturnedWSymbolAsyncIteratorWithNonPromiseReturningNext() {
-  const mapper = (source) => ({
-    [Symbol.asyncIterator]() {
-      return {
-        next() {
-          const { done, value } = source.next();
-          return { done, value: value ? value.toUpperCase() : value };
-        }
-      };
-    }
-  });
-
-  expectsError(() => Transform.by(mapper), {
-    message: 'asyncGeneratorFn must return an async iterable',
-    code: 'ERR_ARG_RETURN_VALUE_NOT_ASYNC_ITERABLE',
-    type: TypeError
-  });
-}
-
 async function transformByObjReturnedWSymbolAsyncIteratorWithNoNext() {
   const mapper = () => ({
     [Symbol.asyncIterator]() {
@@ -69,8 +49,7 @@ async function transformByObjReturnedWSymbolAsyncIteratorWithNoNext() {
   });
 
   expectsError(() => Transform.by(mapper), {
-    message: 'asyncGeneratorFn must return an async iterable',
-    code: 'ERR_ARG_RETURN_VALUE_NOT_ASYNC_ITERABLE',
+    code: 'ERR_INVALID_ARG_TYPE',
     type: TypeError
   });
 }
@@ -81,8 +60,7 @@ async function transformByObjReturnedWSymbolAsyncIteratorThatIsNotFunction() {
   });
 
   expectsError(() => Transform.by(mapper), {
-    message: 'asyncGeneratorFn must return an async iterable',
-    code: 'ERR_ARG_RETURN_VALUE_NOT_ASYNC_ITERABLE',
+    code: 'ERR_INVALID_ARG_TYPE',
     type: TypeError
   });
 }
@@ -91,32 +69,13 @@ async function transformByFuncReturnsObjectWithoutSymbolAsyncIterator() {
   const mapper = () => ({});
 
   expectsError(() => Transform.by(mapper), {
-    message: 'asyncGeneratorFn must return an async iterable',
-    code: 'ERR_ARG_RETURN_VALUE_NOT_ASYNC_ITERABLE',
+    code: 'ERR_INVALID_ARG_TYPE',
     type: TypeError
   });
 }
 
-async function transformByEncoding() {
-  const readable = Readable.from('test');
-  async function * mapper(source) {
-    for await (const chunk of source) {
-      strictEqual(source.encoding, 'ascii');
-      yield chunk.toUpperCase();
-    }
-  }
-  const stream = Transform.by(mapper);
-  stream.setDefaultEncoding('ascii');
-  readable.pipe(stream);
-
-  const expected = ['T', 'E', 'S', 'T'];
-  for await (const chunk of stream) {
-    strictEqual(chunk, expected.shift());
-  }
-}
-
 async function transformBySourceIteratorCompletes() {
-  const readable = Readable.from('test');
+  const readable = Readable.from('test'.split(''));
   const mustReach = mustCall();
   async function * mapper(source) {
     for await (const chunk of source) {
@@ -134,7 +93,7 @@ async function transformBySourceIteratorCompletes() {
 }
 
 async function transformByYieldPlusReturn() {
-  const readable = Readable.from('test');
+  const readable = Readable.from('test'.split(''));
   async function * mapper(source) {
     for await (const chunk of source) {
       yield chunk.toUpperCase();
@@ -151,7 +110,7 @@ async function transformByYieldPlusReturn() {
 }
 
 async function transformByReturnEndsStream() {
-  const readable = Readable.from('test');
+  const readable = Readable.from('test'.split(''));
   async function * mapper(source) {
     for await (const chunk of source) {
       yield chunk.toUpperCase();
@@ -170,7 +129,7 @@ async function transformByReturnEndsStream() {
 }
 
 async function transformByOnData() {
-  const readable = Readable.from('test');
+  const readable = Readable.from('test'.split(''));
   async function * mapper(source) {
     for await (const chunk of source) {
       yield chunk.toUpperCase();
@@ -191,7 +150,7 @@ async function transformByOnData() {
 }
 
 async function transformByOnDataNonObject() {
-  const readable = Readable.from('test', { objectMode: false });
+  const readable = Readable.from('test'.split(''), { objectMode: false });
   async function * mapper(source) {
     for await (const chunk of source) {
       yield chunk.toString().toUpperCase();
@@ -212,7 +171,7 @@ async function transformByOnDataNonObject() {
 }
 
 async function transformByOnErrorAndDestroyed() {
-  const stream = Readable.from('test').pipe(Transform.by(
+  const stream = Readable.from('test'.split('')).pipe(Transform.by(
     async function * mapper(source) {
       for await (const chunk of source) {
         if (chunk === 'e') throw new Error('kaboom');
@@ -230,7 +189,7 @@ async function transformByOnErrorAndDestroyed() {
 }
 
 async function transformByErrorTryCatchAndDestroyed() {
-  const stream = Readable.from('test').pipe(Transform.by(
+  const stream = Readable.from('test'.split('')).pipe(Transform.by(
     async function * mapper(source) {
       for await (const chunk of source) {
         if (chunk === 'e') throw new Error('kaboom');
@@ -250,7 +209,7 @@ async function transformByErrorTryCatchAndDestroyed() {
 }
 
 async function transformByOnErrorAndTryCatchAndDestroyed() {
-  const stream = Readable.from('test').pipe(Transform.by(
+  const stream = Readable.from('test'.split('')).pipe(Transform.by(
     async function * mapper(source) {
       for await (const chunk of source) {
         if (chunk === 'e') throw new Error('kaboom');
@@ -286,17 +245,15 @@ async function transformByThrowPriorToForAwait() {
     strictEqual(err.message, 'kaboom');
   }));
 
-  read.pipe(stream);
+  read.pipe(stream).resume();
 }
 
 Promise.all([
   transformBy(),
   transformByFuncReturnsObjectWithSymbolAsyncIterator(),
-  transformByObjReturnedWSymbolAsyncIteratorWithNonPromiseReturningNext(),
   transformByObjReturnedWSymbolAsyncIteratorWithNoNext(),
   transformByObjReturnedWSymbolAsyncIteratorThatIsNotFunction(),
   transformByFuncReturnsObjectWithoutSymbolAsyncIterator(),
-  transformByEncoding(),
   transformBySourceIteratorCompletes(),
   transformByYieldPlusReturn(),
   transformByReturnEndsStream(),

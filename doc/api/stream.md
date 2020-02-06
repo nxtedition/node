@@ -1646,14 +1646,14 @@ Calling `Readable.from(string)` or `Readable.from(buffer)` will not have
 the strings or buffers be iterated to match the other streams semantics
 for performance reasons.
 
-### stream.Transform.by(asyncGeneratorFunction[, options])
+### stream.Transform.by(transform[, options])
 <!-- YAML
 added: REPLACEME
 -->
 
-* `asyncGeneratorFunction` {AsyncGeneratorFunction} A mapping function which
-accepts a `source` async iterable which can be used to read incoming data, while
-transformed data is pushed to the stream with the `yield` keyword.
+* `transform` {AsyncGeneratorFunction} A mapping function which accepts a `source`
+async iterable which can be used to read incoming data, while transformed data is
+pushed to the stream with the `yield` keyword.
 * `options` {Object} Options provided to `new stream.Transform([options])`.
 By default, `Transform.by()` will set `options.objectMode` to `true`,
 unless this is explicitly opted out by setting `options.objectMode` to `false`.
