@@ -26,7 +26,7 @@ exampleReadStream.pipe(dummyWriteStream).on('finish', function() {
   const assertWriteStream = new stream.Writable({
     write: function(chunk, enc, next) {
       const expected = Buffer.from('xyz\n');
-      assert(chunk.equals(expected));
+      assert.strictEqual(chunk.equals(expected));
     }
   });
   assertWriteStream.setDefaultEncoding(secondEncoding);
