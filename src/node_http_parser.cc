@@ -340,11 +340,11 @@ class Parser : public AsyncWrap, public StreamListener {
     argv[A_VERSION_MAJOR] = Integer::New(env()->isolate(), parser_.http_major);
     argv[A_VERSION_MINOR] = Integer::New(env()->isolate(), parser_.http_minor);
 
-    bool should_keep_alive;
+    int should_keep_alive;
     should_keep_alive = llhttp_should_keep_alive(&parser_);
 
     argv[A_SHOULD_KEEP_ALIVE] =
-        Boolean::New(env()->isolate(), should_keep_alive);
+        Integer::New(env()->isolate(), should_keep_alive);
 
     argv[A_UPGRADE] = Boolean::New(env()->isolate(), parser_.upgrade);
 

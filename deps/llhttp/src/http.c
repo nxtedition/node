@@ -97,12 +97,13 @@ int llhttp__after_message_complete(llhttp_t* parser, const char* p,
 
   should_keep_alive = llhttp_should_keep_alive(parser);
   parser->finish = HTTP_FINISH_SAFE;
+  parser->keep_alive_timeout = 0;
 
   /* Keep `F_LENIENT` flag between messages, but reset every other flag */
   parser->flags &= F_LENIENT;
 
   /* NOTE: this is ignored in loose parsing mode */
-  return should_keep_alive;
+  return should_keep_alive != 0;
 }
 
 
@@ -146,5 +147,15 @@ int llhttp_should_keep_alive(const llhttp_t* parser) {
     }
   }
 
-  return !llhttp_message_needs_eof(parser);
+  if (llhttp_message_needs_eof(parser)) {
+    return 0;
+  }
+
+  if ((parser->flags & F_KEEP_ALIVE_TIMEOUT) &&
+      parser->keep_alive_timeout != 0) {
+    return parser->keep_alive_timeout;
+  }
+
+  /* Indefinite keep-alive timeout */
+  return -1;
 }

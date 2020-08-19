@@ -2,8 +2,12 @@
 #define INCLUDE_LLHTTP_H_
 
 #define LLHTTP_VERSION_MAJOR 2
-#define LLHTTP_VERSION_MINOR 0
-#define LLHTTP_VERSION_PATCH 4
+#define LLHTTP_VERSION_MINOR 1
+#define LLHTTP_VERSION_PATCH 1
+
+#ifndef LLHTTP_STRICT_MODE
+# define LLHTTP_STRICT_MODE 0
+#endif
 
 #ifndef INCLUDE_LLHTTP_ITSELF_H_
 #define INCLUDE_LLHTTP_ITSELF_H_
@@ -33,6 +37,7 @@ struct llhttp__internal_s {
   uint8_t upgrade;
   uint16_t status_code;
   uint8_t finish;
+  uint64_t keep_alive_timeout;
   void* settings;
 };
 
@@ -88,7 +93,8 @@ enum llhttp_flags {
   F_SKIPBODY = 0x40,
   F_TRAILING = 0x80,
   F_LENIENT = 0x100,
-  F_TRANSFER_ENCODING = 0x200
+  F_TRANSFER_ENCODING = 0x200,
+  F_KEEP_ALIVE_TIMEOUT = 0x400
 };
 typedef enum llhttp_flags llhttp_flags_t;
 
@@ -140,7 +146,8 @@ enum llhttp_method {
   HTTP_MKCALENDAR = 30,
   HTTP_LINK = 31,
   HTTP_UNLINK = 32,
-  HTTP_SOURCE = 33
+  HTTP_SOURCE = 33,
+  HTTP_PRI = 34
 };
 typedef enum llhttp_method llhttp_method_t;
 
@@ -206,6 +213,7 @@ typedef enum llhttp_method llhttp_method_t;
   XX(31, LINK, LINK) \
   XX(32, UNLINK, UNLINK) \
   XX(33, SOURCE, SOURCE) \
+  XX(34, PRI, PRI) \
 
 
 
@@ -300,8 +308,9 @@ llhttp_errno_t llhttp_finish(llhttp_t* parser);
  */
 int llhttp_message_needs_eof(const llhttp_t* parser);
 
-/* Returns `1` if there might be any other messages following the last that was
- * successfully parsed.
+/* Returns `-1` or positive keep-alive timeout value (using incoming header
+ * `Keep-Alive: timeout=...`) if there might be any other messages following the
+ * last that was successfully parsed.
  */
 int llhttp_should_keep_alive(const llhttp_t* parser);
 
