@@ -136,3 +136,14 @@ _UpgradeReport_Files/
 __pycache__
 .DS_Store
 *~
+
+# Local AI workspaces and private scratch files
+.claude
+.codex
+.cursor
+.aider*
+.*-private
+
+!.npmignore
+
+!.dockerignore
