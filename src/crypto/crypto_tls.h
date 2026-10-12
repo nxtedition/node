@@ -201,6 +201,11 @@ class TLSWrap : public AsyncWrap,
   void EncOut();  // Write encrypted data from enc_out_ to underlying stream.
   void ClearIn();  // SSL_write() clear data "in" to SSL.
   void ClearOut();  // SSL_read() clear text "out" from SSL.
+  // Reads the outcome of an SSL_read() that returned `read` <= 0. Must be
+  // called right after it, before calling into JS. Returns false if there
+  // is nothing to report.
+  bool GetClearOutError(int read, int* err, v8::Local<v8::Value>* error);
+  void EmitClearOutError(int err, v8::Local<v8::Value> error);
   void Destroy();
 
   // Call Done() on outstanding WriteWrap request.
